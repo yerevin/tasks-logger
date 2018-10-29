@@ -14,11 +14,7 @@ let taskTimer = null;
 let secondsElapsed = 0;
 
 const getProgressBarStatus = context => {
-  return (
-    (context.state.breakTimerSecondsElapsed /
-      (context.state.musicLoopTime / 1000)) *
-    100
-  ).toFixed(0);
+  return ((context.state.breakTimerSecondsElapsed / (context.state.musicLoopTime / 1000)) * 100).toFixed(0);
 };
 
 class App extends Component {
@@ -33,8 +29,7 @@ class App extends Component {
       musicVolume: parseInt(localStorage.getItem("musicVolume")) || 100,
       musicLoopTime: parseInt(localStorage.getItem("musicLoopTime")) || 3600000,
       tasks:
-        JSON.parse(localStorage.getItem("tasks")) &&
-        JSON.parse(localStorage.getItem("tasks")).length !== 0
+        JSON.parse(localStorage.getItem("tasks")) && JSON.parse(localStorage.getItem("tasks")).length !== 0
           ? JSON.parse(localStorage.getItem("tasks")).map(item => {
               item.isTimerRunning = false;
               return item;
@@ -170,25 +165,14 @@ class App extends Component {
                   style={{ marginRight: 5 }}
                   onChange={e => this.setState({ task_url: e.target.value })}
                 />
-                <button
-                  className="btn btn-sm btn-success"
-                  onClick={this.addTask}
-                >
+                <button className="btn btn-sm btn-success" onClick={this.addTask}>
                   Add
                 </button>
               </div>
               <h3>General:</h3>
               <div style={{ display: "flex" }}>
-                <h4>
-                  Time left to next break:{" "}
-                  {converToHumanReadableFormat(
-                    this.state.breakTimerSecondsElapsed
-                  )}
-                </h4>
-                <div
-                  style={{ width: "100%", marginTop: 10 }}
-                  className="progress"
-                >
+                <h4>Time left to next break: {converToHumanReadableFormat(this.state.breakTimerSecondsElapsed)}</h4>
+                <div style={{ width: "100%", marginTop: 10 }} className="progress">
                   <div
                     className="progress-bar"
                     aria-valuenow={getProgressBarStatus(this)}
@@ -206,9 +190,7 @@ class App extends Component {
                 className="form-control input-sm"
                 defaultValue={parseInt(this.state.musicLoopTime / 1000 / 60)}
                 onChange={e => {
-                  this.changeGlobalMusicTimerLoopTime(
-                    parseInt(e.target.value * 60 * 1000)
-                  );
+                  this.changeGlobalMusicTimerLoopTime(parseInt(e.target.value * 60 * 1000));
                 }}
               />
               <label>Break music volume</label>
@@ -220,23 +202,14 @@ class App extends Component {
                   style={{ marginRight: 5 }}
                   onChange={e => {
                     this.setState({ musicVolume: parseInt(e.target.value) });
-                    localStorage.setItem(
-                      "musicVolume",
-                      parseInt(e.target.value)
-                    );
+                    localStorage.setItem("musicVolume", parseInt(e.target.value));
                   }}
                 />
-                <button
-                  className="btn btn-sm"
-                  onClick={this.stopMusic}
-                  style={{ marginLeft: 5, marginBottom: 10 }}
-                >
+                <button className="btn btn-sm" onClick={this.stopMusic} style={{ marginLeft: 5, marginBottom: 10 }}>
                   Stop music
                 </button>
               </div>
-              <h2>
-                Tasks list: (today time elapsed {this.getElapsedTimeSummary()})
-              </h2>
+              <h2>Tasks list: (today time elapsed {this.getElapsedTimeSummary()})</h2>
               <CopyToClipboard text={getTasksSummary(this.state.tasks)}>
                 <button className="btn btn-sm" style={{ marginBottom: 10 }}>
                   Copy to clipboard in JSON format
@@ -254,31 +227,20 @@ class App extends Component {
                   this.state.tasks.length !== 0 &&
                   this.state.tasks.map((item, index) => {
                     return (
-                      <li className="list-group-item">
-                        <button
-                          className="btn btn-sm btn-danger pull-right"
-                          onClick={() => this.deleteTask(item)}
-                        >
+                      <li className="list-group-item dark-bg">
+                        <button className="btn btn-sm btn-danger pull-right" onClick={() => this.deleteTask(item)}>
                           <i className="fa fa-trash" />
                         </button>
                         <button
-                          className={`btn btn-sm btn-${
-                            item.isTimerRunning ? "success" : "default"
-                          } pull-right`}
+                          className={`btn btn-sm btn-${item.isTimerRunning ? "success" : "default"} pull-right`}
                           style={{ marginRight: 5 }}
-                          onClick={() =>
-                            item.isTimerRunning
-                              ? this.stopTaskTimer(item)
-                              : this.startTaskTimer(item)
-                          }
+                          onClick={() => (item.isTimerRunning ? this.stopTaskTimer(item) : this.startTaskTimer(item))}
                         >
                           <i className="fa fa-clock" />
                         </button>
                         <button
                           style={{ marginRight: 5 }}
-                          className={`btn btn-sm btn-${
-                            item.wasLogged ? "primary" : "default"
-                          } pull-right`}
+                          className={`btn btn-sm btn-${item.wasLogged ? "primary" : "default"} pull-right`}
                           onClick={() => this.changeTaskLoggedStatus(item)}
                           title="Was logged?"
                         >
@@ -305,10 +267,7 @@ class App extends Component {
                           }}
                         >
                           <div className="col-md-2">
-                            <p>
-                              Time passed:{" "}
-                              {converToHumanReadableFormat(item.timeElapsed)}
-                            </p>
+                            <p>Time passed: {converToHumanReadableFormat(item.timeElapsed)}</p>
                           </div>
                           <div
                             className="col-md-10"
@@ -336,9 +295,7 @@ class App extends Component {
                                 marginBottom: 10
                               }}
                               onClick={() => {
-                                item.timeElapsed =
-                                  item.timeElapsed +
-                                  calcMinToSec(this.state.timeToManipulate);
+                                item.timeElapsed = item.timeElapsed + calcMinToSec(this.state.timeToManipulate);
                                 this.setState({});
                               }}
                             >
@@ -351,9 +308,7 @@ class App extends Component {
                                 marginBottom: 10
                               }}
                               onClick={() => {
-                                item.timeElapsed =
-                                  item.timeElapsed -
-                                  calcMinToSec(this.state.timeToManipulate);
+                                item.timeElapsed = item.timeElapsed - calcMinToSec(this.state.timeToManipulate);
                                 this.setState({});
                               }}
                             >
